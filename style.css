@@ -1,0 +1,49 @@
+html,body{
+    margin:0;
+    padding:0;
+    background:#ffd6e7; /* pastel pink */
+    overflow:hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    height:100%;
+    width:100%;
+}
+#gameCanvas{
+    display:block;
+    width:100%;
+    height:100%;
+    touch-action:none; /* disable double‑tap zoom */
+}
+#overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#ff4fa8;
+    pointer-events:none;
+    text-align:center;
+}
+#message{
+    font-size:2.5em;
+    margin:0.2em;
+    text-shadow:0 2px 4px rgba(0,0,0,0.15);
+}
+#subMessage{
+    font-size:1.2em;
+    margin:0;
+}
+#restartBtn{
+    margin-top:1em;
+    padding:0.6em 1.4em;
+    font-size:1em;
+    border:none;
+    border-radius:30px;
+    background:#ff4fa8;
+    color:#fff;
+    cursor:pointer;
+    pointer-events:auto;
+}
