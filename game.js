@@ -20,6 +20,7 @@ window.addEventListener("resize", ()=>{
 const gravity = 0.6;
 const jumpVelocity = -11;
 const groundHeight = 60;
+// Worm dimensions control drawing only; body visually segmented
 const worm = { x: W*0.2, y:0, w:50, h:28, vy:0 };
 let groundY = H - groundHeight;
 
@@ -31,6 +32,7 @@ const minHoleWidth = 70;
 const maxHoleWidth = 120;
 
 let score = 0;
+const milestone = 10; // show message after 10 jumps
 let gameOver = false;
 let started = false;
 
@@ -97,9 +99,9 @@ function update(){
         if(h.x + h.w < worm.x && !h.passed){
             score++;
             h.passed = true;
-            if(score === 5){
+            if(score === milestone){
                 // show love message briefly
-                showTempMessage("❤ I love you Sarah! ❤", 2000);
+                showTempMessage("❤ I love you Sarah! ❤", 2500);
             }
         }
         if(h.x + h.w < -20){
@@ -128,18 +130,8 @@ function draw(){
     ctx.fillStyle="#ffacd9";
     ctx.fillRect(0,groundY,W,groundHeight);
 
-    // worm
-    ctx.fillStyle="#ff4fa8";
-    ctx.fillRect(worm.x, worm.y, worm.w, worm.h);
-    // worm eye
-    ctx.fillStyle="#ffffff";
-    ctx.beginPath();
-    ctx.arc(worm.x + worm.w*0.75, worm.y + worm.h*0.35, 4, 0, 2*Math.PI);
-    ctx.fill();
-    ctx.fillStyle="#000";
-    ctx.beginPath();
-    ctx.arc(worm.x + worm.w*0.75, worm.y + worm.h*0.35, 2, 0, 2*Math.PI);
-    ctx.fill();
+    // draw worm: use segmented circles for a cute rounded body
+    drawWorm();
 
     // holes
     ctx.fillStyle="#372c2e";
@@ -151,6 +143,35 @@ function draw(){
     ctx.fillStyle="#ff4fa8";
     ctx.font="bold 24px Helvetica Neue, Arial";
     ctx.fillText("Score: "+score, 20, 40);
+}
+
+function drawWorm(){
+    const segmentCount = 5;
+    const segRadius = worm.h/2;
+    const gap = (worm.w - segRadius*2) / (segmentCount - 1);
+
+    for(let i=0;i<segmentCount;i++){
+        const cx = worm.x + segRadius + i*gap;
+        const cy = worm.y + segRadius;
+        ctx.beginPath();
+        ctx.fillStyle = "#ff4fa8";
+        ctx.arc(cx, cy, segRadius, 0, Math.PI*2);
+        ctx.fill();
+        // subtle highlight for cuteness
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.beginPath();
+        ctx.arc(cx - segRadius*0.4, cy - segRadius*0.4, segRadius*0.4, 0, Math.PI*2);
+        ctx.fill();
+    }
+    // eye on the front segment
+    ctx.fillStyle="#ffffff";
+    ctx.beginPath();
+    ctx.arc(worm.x + worm.w - segRadius*0.7, worm.y + segRadius*0.7, segRadius*0.4, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle="#000";
+    ctx.beginPath();
+    ctx.arc(worm.x + worm.w - segRadius*0.6, worm.y + segRadius*0.7, segRadius*0.2, 0, Math.PI*2);
+    ctx.fill();
 }
 
 function loop(){
